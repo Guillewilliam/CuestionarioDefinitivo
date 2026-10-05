@@ -1,0 +1,19 @@
+{
+  "name": "project-date",
+  "version": "1.0.0",
+  "description": "Test de personalidad interactivo con desenlace secreto y mobile-first",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx -y serve . -l 8080",
+    "dev": "npx -y serve . -l 8080",
+    "build": "echo 'Web estática lista'"
+  },
+  "keywords": [
+    "interactive",
+    "game",
+    "quiz",
+    "mobile-first"
+  ],
+  "author": "Guillermo",
+  "license": "MIT"
+}

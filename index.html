@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Test de personalidad interactivo con evaluación avanzada de decisiones.">
+  <meta name="theme-color" content="#0a0e17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Test de Personalidad Definitivo™</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-cyber">
+
+  <!-- Canvas para confeti y efectos de celebración -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Barra de control superior persistente (Audio & Estado) -->
+  <header class="app-header">
+    <div class="header-status">
+      <span class="pulse-indicator"></span>
+      <span id="header-system-tag">SYS_ONLINE // SECURE_NODE</span>
+    </div>
+    <button id="btn-sound-toggle" class="icon-button" aria-label="Activar o desactivar sonido" title="Sonido">
+      <span id="sound-icon">🔊</span>
+    </button>
+  </header>
+
+  <!-- Contenedor Principal de la App Mobile-First -->
+  <main id="app-container" class="app-container">
+
+    <!-- ================= PANTALLA 1: INICIO ================= -->
+    <section id="screen-intro" class="screen active" aria-labelledby="intro-title">
+      <div class="screen-content intro-layout">
+        <div class="system-badge" id="intro-badge">SISTEMA V3.14 — EVALUACIÓN CUÁNTICA</div>
+        
+        <div class="intro-hero-visual">
+          <div class="scanner-circle">
+            <div class="scanner-ring"></div>
+            <div class="scanner-core">⚡</div>
+          </div>
+        </div>
+
+        <h1 id="intro-title" class="title-glitch">TEST DE PERSONALIDAD DEFINITIVO™</h1>
+        
+        <p class="intro-description" id="intro-subtitle">
+          Responde honestamente.<br>Los resultados determinarán tu futuro.
+        </p>
+
+        <div class="intro-meta-box">
+          <div class="meta-item">
+            <span class="meta-label">PREGUNTAS:</span>
+            <span class="meta-val">9 MÓDULOS</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">TIEMPO ESTIMADO:</span>
+            <span class="meta-val">~2 MIN</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">PRECISIÓN:</span>
+            <span class="meta-val">99.8%</span>
+          </div>
+        </div>
+
+        <div class="action-footer">
+          <button id="btn-start-test" class="btn btn-primary btn-glow" type="button">
+            <span>INICIAR TEST</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+          <p class="disclaimer-text" id="intro-disclaimer">
+            ⚠️ No hay respuestas incorrectas... probablemente.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PANTALLA 2: TEST ================= -->
+    <section id="screen-quiz" class="screen" aria-labelledby="quiz-question-title">
+      <div class="screen-content quiz-layout">
+        <div class="quiz-topbar">
+          <span class="quiz-category" id="quiz-category">GESTIÓN DE CRISIS</span>
+          <span class="quiz-step-indicator" id="quiz-counter">1 / 9</span>
+        </div>
+
+        <!-- Barra de progreso superior del test -->
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-fill" id="quiz-progress-fill" style="width: 11%;"></div>
+        </div>
+
+        <div class="quiz-card">
+          <h2 id="quiz-question-title" class="quiz-question">¿Cargando pregunta?</h2>
+          
+          <div class="quiz-answers" id="quiz-answers-container" role="radiogroup" aria-label="Opciones de respuesta">
+            <!-- Las opciones se inyectan dinámicamente -->
+          </div>
+        </div>
+
+        <div class="quiz-feedback-hint" id="quiz-hint">
+          Toca una opción para continuar
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PANTALLA 3: RESULTADOS ================= -->
+    <section id="screen-results" class="screen" aria-labelledby="results-title">
+      <div class="screen-content results-layout">
+        
+        <!-- Fase A de Resultados: Analizando -->
+        <div id="results-analyzing-box" class="analyzing-state">
+          <div class="tech-loader">
+            <div class="loader-track"></div>
+            <div class="loader-spinner"></div>
+          </div>
+          <h2 class="analyzing-title" id="results-analyzing-text">ANALIZANDO RESPUESTAS…</h2>
+          <p class="analyzing-subtitle" id="results-analyzing-sub">Procesando patrones cognitivos y alineación neuronal...</p>
+          <div class="loading-bar-wrapper">
+            <div class="loading-bar-fill" id="results-loading-bar"></div>
+          </div>
+        </div>
+
+        <!-- Fase B de Resultados: Letras Desordenadas -->
+        <div id="results-obtained-box" class="obtained-state hidden">
+          <div class="status-pill status-warning">ANOMALÍA DETECTADA</div>
+          <h2 id="results-title" class="results-header-title">RESULTADOS OBTENIDOS</h2>
+          <p class="results-detected-txt" id="results-detected-txt">Se han detectado varios caracteres.</p>
+          <p class="results-warning-txt" id="results-warning-txt">⚠️ El orden de los resultados parece incorrecto.</p>
+
+          <!-- Contenedor de letras desordenadas y flotantes -->
+          <div class="jumbled-letters-board" id="jumbled-letters-board" aria-label="Letras desordenadas">
+            <!-- Letras inyectadas con delay y movimiento dinámico -->
+          </div>
+
+          <div class="results-callout">
+            <p id="results-callout-text" class="results-callout-highlight">Dadas tus respuestas deberías...</p>
+          </div>
+
+          <!-- Botón falso de AuronPlay -->
+          <div class="auron-btn-container">
+            <button id="btn-auronplay" class="btn btn-auron btn-shake" type="button">
+              <span class="twitch-icon">📺</span>
+              <span>VER STREAM DE AURONPLAY</span>
+            </button>
+            <span class="sub-btn-note">Recomendado por el sistema de calibración</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= PANTALLA 4: CONEXIÓN AURONPLAY Y ERROR 404 ================= -->
+    <section id="screen-auronplay" class="screen" aria-labelledby="auron-screen-title">
+      <div class="screen-content auron-layout">
+        
+        <!-- Subfase: Conectando stream -->
+        <div id="auron-connecting-box" class="auron-connecting-box">
+          <div class="auron-twitch-badge">TWITCH LIVE INTEGRATION</div>
+          <div class="auron-avatar-glow">
+            <div class="auron-avatar-icon">🎮</div>
+          </div>
+          <h2 id="auron-screen-title" class="connecting-step-text" id="auron-step-text">Conectando con AuronPlay…</h2>
+          
+          <div class="stream-progress-container">
+            <div class="stream-progress-fill" id="auron-progress-fill"></div>
+          </div>
+          <span class="stream-percent" id="auron-percent">0%</span>
+        </div>
+
+        <!-- Subfase: Falso Error 404 -->
+        <div id="auron-error-box" class="auron-error-box hidden">
+          <div class="error-badge-glitch">ERROR 404</div>
+          <h2 class="error-code-title">URL_NOT_FOUND</h2>
+          <div class="error-terminal-card">
+            <p class="error-primary-msg">El stream de AuronPlay no ha podido ser localizado.</p>
+            <div class="error-divider"></div>
+            <p class="error-detail-msg">
+              ERR_STREAM_INTERCEPTED: La transmisión ha sido redirigida por un subproceso de memoria encriptada.
+            </p>
+          </div>
+
+          <div class="auron-action-area">
+            <button id="btn-auron-back" class="btn btn-danger-back" type="button">
+              <span>VOLVER</span>
+              <span class="back-icon">↩</span>
+            </button>
+            <span class="action-caption">Reanudar secuencia de diagnóstico</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= PANTALLA 5: DESENCRIPTADO ================= -->
+    <section id="screen-decrypt" class="screen" aria-labelledby="decrypt-title">
+      <div class="screen-content decrypt-layout">
+        <div class="terminal-window">
+          <div class="terminal-topbar">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <div class="terminal-tag" id="decrypt-title">TERMINAL // DECRYPTOR_v9</div>
+          </div>
+
+          <div class="terminal-console" id="terminal-console" aria-live="polite">
+            <!-- Líneas de terminal inyectadas progresivamente -->
+          </div>
+
+          <div class="terminal-progress-section">
+            <div class="terminal-bar-container">
+              <div class="terminal-bar-fill" id="decrypt-progress-fill"></div>
+            </div>
+            <div class="terminal-percent-row">
+              <span class="decrypt-status-txt" id="decrypt-status-text">INICIANDO...</span>
+              <span class="decrypt-percent" id="decrypt-percent">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="decrypt-info-card hidden" id="decrypt-info-card">
+          <p class="decrypt-discovered-msg" id="decrypt-info-text">
+            Las respuestas contenían información oculta.
+          </p>
+          <div class="decrypt-pulse-text">ORDENANDO RESULTADOS…</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PANTALLA 6: RECONSTRUCCIÓN DE LA FRASE ================= -->
+    <section id="screen-reconstruct" class="screen" aria-labelledby="reconstruct-title">
+      <div class="screen-content reconstruct-layout">
+        <div class="reconstruct-badge">SECUENCIA DE RECONSTRUCCIÓN</div>
+        <h2 id="reconstruct-title" class="reconstruct-heading">ENSAMBLANDO MENSAJE…</h2>
+
+        <!-- Tablero de reconstrucción por palabras -->
+        <div class="word-assembly-board" id="word-assembly-board">
+          
+          <!-- Palabra 1: QUIERES -->
+          <div class="word-row" id="word-row-1" data-word="QUIERES">
+            <div class="word-slots" id="slots-quieres">
+              <!-- Letras Q U I E R E S -->
+            </div>
+          </div>
+
+          <!-- Palabra 2: SALIR -->
+          <div class="word-row" id="word-row-2" data-word="SALIR">
+            <div class="word-slots" id="slots-salir">
+              <!-- Letras S A L I R -->
+            </div>
+          </div>
+
+          <!-- Palabra 3: CONMIGO? -->
+          <div class="word-row" id="word-row-3" data-word="CONMIGO?">
+            <div class="word-slots" id="slots-conmigo">
+              <!-- Letras C O N M I G O ? -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Revelación final majestuosa -->
+        <div class="final-assembled-banner hidden" id="final-assembled-banner">
+          <span class="glow-symbol">✨</span>
+          <span class="assembled-text">¿QUIERES SALIR CONMIGO?</span>
+          <span class="glow-symbol">✨</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PANTALLA 7: PANTALLA FINAL (ROMÁNTICA / PERSONAL) ================= -->
+    <section id="screen-final" class="screen" aria-labelledby="final-question-heading">
+      <div class="screen-content final-layout">
+        
+        <div class="final-message-card">
+          <div class="heart-pulse-icon">❤️</div>
+          
+          <div class="final-confession-text">
+            <p class="final-line final-line-1" id="final-line-1">Vale…</p>
+            <p class="final-line final-line-2" id="final-line-2">En realidad todo esto era una excusa.</p>
+            <p class="final-line final-line-3" id="final-line-3">Quería preguntarte algo.</p>
+          </div>
+
+          <h2 id="final-question-heading" class="final-big-question">
+            ¿QUIERES SALIR CONMIGO?
+          </h2>
+
+          <div class="no-feedback-toast hidden" id="no-feedback-toast" role="status" aria-live="assertive">
+            ¿Seguro? 🤔
+          </div>
+
+          <!-- Zona de decisión con SÍ y NO troll -->
+          <div class="decision-arena" id="decision-arena">
+            <button id="btn-yes" class="btn btn-yes-romantic btn-heartbeat" type="button">
+              <span>SÍ ❤️</span>
+            </button>
+            <button id="btn-no" class="btn btn-no-dodger" type="button">
+              <span>NO</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= PANTALLA 8: CELEBRACIÓN / ÉXITO ================= -->
+    <section id="screen-success" class="screen" aria-labelledby="success-title">
+      <div class="screen-content success-layout">
+        
+        <div class="success-card">
+          <div class="success-badge-heart">
+            <span class="badge-text" id="success-badge-text">MISIÓN COMPLETADA ❤️</span>
+          </div>
+
+          <div class="couple-celebration-hero">
+            <span class="floating-heart fh-1">💖</span>
+            <span class="floating-heart fh-2">✨</span>
+            <span class="floating-heart fh-3">🥂</span>
+            <div class="victory-avatar">🎉</div>
+          </div>
+
+          <h2 id="success-title" class="success-main-title">¡SABÍA QUE DIRÍAS QUE SÍ!</h2>
+          
+          <p class="success-lead-text" id="success-subtitle">
+            Creo que ahora nos toca decidir dónde vamos.
+          </p>
+
+          <div class="date-ticket-card">
+            <div class="ticket-header">
+              <span class="ticket-type">CITA CONFIRMADA</span>
+              <span class="ticket-pass">PASS #001</span>
+            </div>
+            <div class="ticket-body">
+              <div class="ticket-row">
+                <span class="ticket-label">INVITADA DE HONOR:</span>
+                <span class="ticket-val" id="ticket-recipient-name">Tú</span>
+              </div>
+              <div class="ticket-row">
+                <span class="ticket-label">ORGANIZADO POR:</span>
+                <span class="ticket-val" id="ticket-sender-name">Guillermo</span>
+              </div>
+              <div class="ticket-row">
+                <span class="ticket-label">ESTADO:</span>
+                <span class="ticket-val status-val">PENDIENTE DE ELEGIR PLAN ✨</span>
+              </div>
+            </div>
+            <div class="ticket-footer-note" id="ticket-extra-note">
+              Prepárate, que prometo un planazo inolvidable. ✨
+            </div>
+          </div>
+
+          <div class="success-action-zone">
+            <a id="btn-whatsapp-share" class="btn btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
+              <span>DÍSELO A GUILLERMO 💬</span>
+            </a>
+            <a id="btn-secret-twitch" class="btn btn-secret-twitch" href="https://www.twitch.tv/peereira7" target="_blank" rel="noopener noreferrer">
+              <span class="twitch-icon">📺</span>
+              <span>Apartado oculto</span>
+            </a>
+            <button id="btn-restart-experience" class="btn btn-secondary-subtle" type="button">
+              <span>Repetir la experiencia 🔄</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Scripts Modulares -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
