@@ -14,7 +14,1519 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+/* ==========================================================================
+   PROYECTO DATE - HOJA DE ESTILOS MOBILE-FIRST
+   Estética: Cyber/Terminal/Gaming -> Romance Cálido y Elegante
+   ========================================================================== */
+
+/* ----------------- Reset & Custom Properties ----------------- */
+:root {
+  /* Fuentes */
+  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Paleta Base: Modo Cyber / Tech */
+  --bg-primary: #07090e;
+  --bg-surface: rgba(16, 22, 36, 0.75);
+  --bg-surface-elevated: rgba(26, 35, 58, 0.85);
+  --border-color: rgba(0, 240, 255, 0.22);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+
+  --accent-cyan: #00f0ff;
+  --accent-cyan-glow: rgba(0, 240, 255, 0.4);
+  --accent-purple: #9d4edd;
+  --accent-purple-glow: rgba(157, 78, 221, 0.35);
+  --accent-green: #10b981;
+  --accent-danger: #ff3366;
+  --accent-warning: #f59e0b;
+  --twitch-purple: #9146ff;
+
+  /* Texto */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Sombras y Luces */
+  --shadow-card: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
+  --shadow-neon: 0 0 20px var(--accent-cyan-glow);
+  --glow-pink: 0 0 24px rgba(255, 77, 121, 0.5);
+
+  /* Transiciones */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+}
+
+/* Modo Tema Romántico (Activado en Fase Final) */
+body.theme-romantic {
+  --bg-primary: #0f0514;
+  --bg-surface: rgba(32, 14, 42, 0.85);
+  --bg-surface-elevated: rgba(48, 20, 64, 0.9);
+  --border-color: rgba(255, 105, 150, 0.3);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --accent-cyan: #ff65a3;
+  --accent-cyan-glow: rgba(255, 101, 163, 0.4);
+  --text-primary: #ffffff;
+  --text-secondary: #fbcfe8;
+  --text-muted: #f472b6;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  min-height: 100dvh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  overflow-x: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.8s var(--ease-smooth);
+}
+
+/* Subtle background glow grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% 15%, rgba(0, 240, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(157, 78, 221, 0.09) 0%, transparent 55%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.8s ease;
+}
+
+body.theme-romantic::before {
+  background: 
+    radial-gradient(circle at 50% 20%, rgba(255, 77, 121, 0.18) 0%, transparent 65%),
+    radial-gradient(circle at 80% 75%, rgba(168, 85, 247, 0.14) 0%, transparent 55%);
+}
+
+/* Canvas para confeti */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ----------------- Header de Sistema ----------------- */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  padding: env(safe-area-inset-top, 8px) 16px 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+  background: linear-gradient(180deg, rgba(7, 9, 14, 0.95) 0%, rgba(7, 9, 14, 0) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.header-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 8px var(--accent-cyan-glow);
+}
+
+body.theme-romantic .header-status {
+  color: #ff75a0;
+  text-shadow: 0 0 8px rgba(255, 117, 160, 0.5);
+}
+
+.pulse-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan);
+  animation: pulse-dot 1.8s infinite;
+}
+
+body.theme-romantic .pulse-indicator {
+  background-color: #ff4d79;
+  box-shadow: 0 0 10px #ff4d79;
+}
+
+.icon-button {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.icon-button:active {
+  transform: scale(0.92);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ----------------- Contenedor Principal ----------------- */
+.app-container {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  max-width: 480px; /* Tamaño óptimo para mobile centrado en desktop */
+  margin: 0 auto;
+  padding: calc(56px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px)) 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* ----------------- Pantallas y Transiciones ----------------- */
+.screen {
+  display: none;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(12px) scale(0.985);
+  transition: opacity 0.4s var(--ease-smooth), transform 0.4s var(--ease-smooth);
+}
+
+.screen.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: screenEnter 0.45s var(--ease-smooth) forwards;
+}
+
+@keyframes screenEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.screen-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ----------------- Componentes Reutilizables ----------------- */
+.system-badge {
+  display: inline-flex;
+  align-self: center;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid var(--accent-cyan-glow);
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-self: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.status-warning {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+/* Botones Principales (Mobile Friendly >= 48px) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: transform 0.18s var(--ease-spring), box-shadow 0.2s ease, background 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #00f0ff 0%, #0077ff 100%);
+  color: #050811;
+  box-shadow: 0 4px 20px rgba(0, 240, 255, 0.35);
+}
+
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 80%
+  );
+  transform: translateX(-100%);
+  animation: shine 3.5s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  25%, 100% { transform: translateX(100%) rotate(25deg); }
+}
+
+.btn-arrow {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+}
+
+.btn:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+.btn-auron {
+  background: linear-gradient(135deg, #9146ff 0%, #6441a5 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(145, 70, 255, 0.4);
+  font-size: 1.05rem;
+}
+
+.btn-danger-back {
+  background: rgba(255, 51, 102, 0.15);
+  border: 1px solid rgba(255, 51, 102, 0.4);
+  color: #ff3366;
+}
+
+.btn-danger-back:active {
+  background: rgba(255, 51, 102, 0.3);
+}
+
+.btn-yes-romantic {
+  background: linear-gradient(135deg, #ff4d79 0%, #ff2a6d 100%);
+  color: #ffffff;
+  font-size: 1.25rem;
+  box-shadow: 0 6px 24px rgba(255, 77, 121, 0.5);
+}
+
+.btn-heartbeat {
+  animation: heartbeat 2s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.04); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.04); }
+  70% { transform: scale(1); }
+}
+
+.btn-no-dodger {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  min-width: 90px;
+  transition: transform 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28), background 0.2s ease;
+}
+
+.btn-whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+  font-size: 1.05rem;
+}
+
+.btn-secret-twitch {
+  background: linear-gradient(135deg, #9146ff 0%, #6441a5 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(145, 70, 255, 0.4);
+  font-size: 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secret-twitch:active {
+  transform: scale(0.96);
+  background: linear-gradient(135deg, #772ce8 0%, #4b2b85 100%);
+}
+
+.btn-secondary-subtle {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  min-height: 44px;
+  font-size: 0.88rem;
+  margin-top: 10px;
+}
+
+/* ----------------- PANTALLA 1: INICIO ----------------- */
+.intro-layout {
+  text-align: center;
+  align-items: center;
+}
+
+.intro-hero-visual {
+  margin: 10px 0 24px;
+}
+
+.scanner-circle {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, transparent 70%);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+}
+
+.scanner-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px dashed rgba(0, 240, 255, 0.5);
+  animation: rotateRing 14s linear infinite;
+}
+
+.scanner-core {
+  font-size: 2.2rem;
+  animation: floatSubtle 3s ease-in-out infinite;
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes floatSubtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.title-glitch {
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 6vw, 2.3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  background: linear-gradient(180deg, #ffffff 40%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.intro-description {
+  font-size: clamp(0.95rem, 3.8vw, 1.08rem);
+  color: var(--text-secondary);
+  white-space: pre-line;
+  margin-bottom: 24px;
+  max-width: 360px;
+}
+
+.intro-meta-box {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+}
+
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.meta-val {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+
+.action-footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.disclaimer-text {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+/* ----------------- PANTALLA 2: QUIZ ----------------- */
+.quiz-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.quiz-category {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  letter-spacing: 0.08em;
+}
+
+.quiz-step-indicator {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.progress-bar-wrapper {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00f0ff, #0077ff);
+  border-radius: var(--radius-full);
+  transition: width 0.35s var(--ease-smooth);
+}
+
+.quiz-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 22px 18px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 16px;
+}
+
+.quiz-question {
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 4.4vw, 1.35rem);
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.quiz-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.answer-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 16px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s var(--ease-smooth);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.answer-option-btn:hover {
+  background: rgba(0, 240, 255, 0.08);
+  border-color: rgba(0, 240, 255, 0.3);
+}
+
+.answer-option-btn:active {
+  transform: scale(0.98);
+}
+
+.answer-option-btn.selected {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 16px var(--accent-cyan-glow);
+}
+
+.answer-index-badge {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+
+.answer-text {
+  flex: 1;
+  line-height: 1.35;
+}
+
+.quiz-feedback-hint {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ----------------- PANTALLA 3: RESULTADOS ----------------- */
+.results-layout {
+  text-align: center;
+  align-items: center;
+}
+
+.analyzing-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 10px;
+  width: 100%;
+}
+
+.tech-loader {
+  width: 72px;
+  height: 72px;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.loader-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.08);
+}
+
+.loader-spinner {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-top-color: var(--accent-cyan);
+  border-right-color: var(--accent-purple);
+  animation: spin 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.analyzing-title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.analyzing-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  max-width: 300px;
+}
+
+.loading-bar-wrapper {
+  width: 100%;
+  max-width: 260px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+/* Resultados Obtenidos & Letras Desordenadas */
+.obtained-state {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.results-header-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 5vw, 1.7rem);
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.results-detected-txt {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.results-warning-txt {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: #fbbf24;
+  margin-top: 6px;
+  margin-bottom: 18px;
+}
+
+/* Tablero de Letras Desordenadas */
+.jumbled-letters-board {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 14px 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  margin-bottom: 18px;
+  min-height: 120px;
+}
+
+.letter-card {
+  width: 36px;
+  height: 42px;
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+  user-select: none;
+  animation: letterFloat 3s ease-in-out infinite alternate;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes letterFloat {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(2deg); }
+  100% { transform: translateY(2px) rotate(-2deg); }
+}
+
+.results-callout {
+  margin-bottom: 14px;
+  line-height: 1.35;
+}
+
+.results-callout-highlight {
+  font-family: var(--font-heading);
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  background: linear-gradient(180deg, #ffffff 40%, #00f0ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+}
+
+.auron-btn-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-shake {
+  animation: gentleShake 4s ease-in-out infinite;
+}
+
+@keyframes gentleShake {
+  0%, 88%, 100% { transform: rotate(0deg); }
+  90% { transform: rotate(-2deg); }
+  92% { transform: rotate(2deg); }
+  94% { transform: rotate(-1.5deg); }
+  96% { transform: rotate(1.5deg); }
+}
+
+.sub-btn-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ----------------- PANTALLA 4: AURONPLAY & 404 ----------------- */
+.auron-layout {
+  text-align: center;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.auron-connecting-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auron-twitch-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #a970ff;
+  background: rgba(145, 70, 255, 0.15);
+  border: 1px solid rgba(145, 70, 255, 0.4);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: 24px;
+}
+
+.auron-avatar-glow {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(145, 70, 255, 0.3) 0%, transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(145, 70, 255, 0.5);
+  box-shadow: 0 0 25px rgba(145, 70, 255, 0.4);
+  margin-bottom: 20px;
+}
+
+.auron-avatar-icon {
+  font-size: 2.2rem;
+}
+
+.connecting-step-text {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  min-height: 38px;
+}
+
+.stream-progress-container {
+  width: 100%;
+  max-width: 280px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.stream-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #9146ff, #00f0ff);
+  border-radius: var(--radius-full);
+  transition: width 0.2s ease;
+}
+
+.stream-percent {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* Error 404 */
+.auron-error-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: glitchShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes glitchShake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+  40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+
+.error-badge-glitch {
+  font-family: var(--font-mono);
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #ff3366;
+  text-shadow: 0 0 15px rgba(255, 51, 102, 0.7), 2px 2px #00f0ff;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.error-code-title {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  letter-spacing: 0.08em;
+}
+
+.error-terminal-card {
+  width: 100%;
+  background: rgba(255, 51, 102, 0.06);
+  border: 1px solid rgba(255, 51, 102, 0.25);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.error-primary-msg {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.error-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 10px;
+}
+
+.error-detail-msg {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.auron-action-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action-caption {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+/* ----------------- PANTALLA 5: DESENCRIPTADO ----------------- */
+.decrypt-layout {
+  width: 100%;
+}
+
+.terminal-window {
+  background: #05070c;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.terminal-topbar {
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-red { background: #ff5f56; }
+.dot-yellow { background: #ffbd2e; }
+.dot-green { background: #27c93f; }
+
+.terminal-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.terminal-console {
+  padding: 16px;
+  min-height: 180px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.terminal-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-cyan);
+  opacity: 0;
+  animation: lineFadeIn 0.25s forwards;
+}
+
+@keyframes lineFadeIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.terminal-line-prefix {
+  color: var(--accent-purple);
+  font-weight: 700;
+}
+
+.terminal-progress-section {
+  padding: 12px 16px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.terminal-bar-container {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.terminal-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00f0ff, #10b981);
+  border-radius: var(--radius-full);
+  transition: width 0.15s ease;
+}
+
+.terminal-percent-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.decrypt-status-txt {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.decrypt-percent {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.decrypt-info-card {
+  text-align: center;
+  padding: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.decrypt-discovered-msg {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.decrypt-pulse-text {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  animation: pulse-dot 1.5s infinite;
+}
+
+/* ----------------- PANTALLA 6: RECONSTRUCCIÓN ----------------- */
+.reconstruct-layout {
+  text-align: center;
+  align-items: center;
+}
+
+.reconstruct-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  margin-bottom: 8px;
+  letter-spacing: 0.08em;
+}
+
+.reconstruct-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 4.5vw, 1.45rem);
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.word-assembly-board {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.word-row {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 8px;
+  display: flex;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.word-row.revealed {
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.15);
+}
+
+.word-slots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.slot-tile {
+  width: 34px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: transparent;
+  transition: all 0.3s var(--ease-spring);
+}
+
+.slot-tile.filled {
+  background: linear-gradient(145deg, rgba(0, 240, 255, 0.2), rgba(157, 78, 221, 0.2));
+  border: 1px solid var(--accent-cyan);
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.final-assembled-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 14px;
+  background: linear-gradient(135deg, rgba(255, 77, 121, 0.25) 0%, rgba(168, 85, 247, 0.25) 100%);
+  border: 1px solid rgba(255, 77, 121, 0.5);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 25px rgba(255, 77, 121, 0.35);
+  animation: bannerPop 0.6s var(--ease-spring) forwards;
+}
+
+@keyframes bannerPop {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.assembled-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 4.8vw, 1.45rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 12px rgba(255, 77, 121, 0.6);
+}
+
+.glow-symbol {
+  font-size: 1.2rem;
+  animation: pulse-dot 1.4s infinite;
+}
+
+/* ----------------- PANTALLA 7: FINAL (ROMÁNTICA) ----------------- */
+.final-layout {
+  text-align: center;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.final-message-card {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 32px 20px 24px;
+  box-shadow: var(--shadow-card), 0 0 30px rgba(255, 77, 121, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: relative;
+}
+
+.heart-pulse-icon {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  display: inline-block;
+  animation: heartbeat 1.8s infinite ease-in-out;
+}
+
+.final-confession-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.final-line {
+  font-size: clamp(1rem, 3.8vw, 1.15rem);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.final-line-1 { font-size: 1.25rem; font-weight: 600; color: #ffffff; }
+
+.final-big-question {
+  font-family: var(--font-heading);
+  font-size: clamp(1.45rem, 5.5vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(255, 77, 121, 0.6);
+  margin-bottom: 24px;
+}
+
+.no-feedback-toast {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ffffff;
+  display: inline-block;
+  margin-bottom: 20px;
+  animation: toastBounce 0.3s var(--ease-spring);
+}
+
+@keyframes toastBounce {
+  0% { transform: scale(0.9) translateY(4px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Área de botones de decisión (Mobile Touch-Optimized) */
+.decision-arena {
+  width: 100%;
+  position: relative;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+#btn-yes {
+  max-width: 260px;
+  z-index: 2;
+}
+
+#btn-no {
+  max-width: 160px;
+  z-index: 5;
+}
+
+/* ----------------- PANTALLA 8: CELEBRACIÓN / ÉXITO ----------------- */
+.success-layout {
+  text-align: center;
+  align-items: center;
+}
+
+.success-card {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid rgba(255, 77, 121, 0.4);
+  border-radius: var(--radius-lg);
+  padding: 28px 20px 24px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7), var(--glow-pink);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.success-badge-heart {
+  display: inline-flex;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 77, 121, 0.15);
+  border: 1px solid rgba(255, 77, 121, 0.4);
+  color: #ff65a3;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+
+.couple-celebration-hero {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.victory-avatar {
+  font-size: 3.5rem;
+  animation: floatSubtle 2.5s ease-in-out infinite;
+}
+
+.floating-heart {
+  position: absolute;
+  font-size: 1.4rem;
+  animation: floatHeart 3s ease-in-out infinite;
+}
+
+.fh-1 { top: -8px; left: -18px; animation-delay: 0.2s; }
+.fh-2 { top: -14px; right: -16px; animation-delay: 0.8s; }
+.fh-3 { bottom: 0px; right: -24px; animation-delay: 1.4s; }
+
+@keyframes floatHeart {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(10deg); }
+}
+
+.success-main-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 5.2vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.success-lead-text {
+  font-size: clamp(0.95rem, 3.8vw, 1.05rem);
+  color: var(--text-secondary);
+  margin-bottom: 22px;
+}
+
+/* Tarjeta Ticket de la Cita */
+.date-ticket-card {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px dashed rgba(255, 105, 150, 0.35);
+  border-radius: var(--radius-md);
+  padding: 16px 14px;
+  text-align: left;
+  margin-bottom: 22px;
+}
+
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #ff65a3;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.ticket-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.ticket-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.ticket-val {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ticket-val.status-val {
+  color: #10b981;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.ticket-footer-note {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+}
+
+.success-action-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ----------------- Utilidades y Helpers ----------------- */
+.hidden {
+  display: none !important;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ----------------- Media Queries Mobile-First ----------------- */
+/* Pantallas ultra-pequeñas (320px) */
+@media (max-width: 340px) {
+  html { font-size: 14.5px; }
+  .app-container { padding-left: 10px; padding-right: 10px; }
+  .quiz-card { padding: 16px 12px; }
+  .slot-tile { width: 30px; height: 38px; font-size: 1rem; }
+  .letter-card { width: 32px; height: 38px; font-size: 1.05rem; }
+}
+
+/* Pantallas medianas y grandes */
+@media (min-width: 481px) {
+  .app-container {
+    padding-top: 70px;
+  }
+  .quiz-card {
+    padding: 26px 22px;
+  }
+}
+
+/* Soporte de accesibilidad para movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+</style>
 </head>
 <body class="theme-cyber">
 
@@ -376,6 +1888,1183 @@
   </main>
 
   <!-- Scripts Modulares -->
-  <script type="module" src="js/app.js"></script>
+  <script>
+/**
+ * CONFIGURACIÓN CENTRALIZADA DEL PROYECTO DATE
+ * Todos los textos, nombres, preguntas, respuestas, letras y mensajes
+ * están centralizados aquí para facilitar su edición sin tocar la lógica.
+ */
+
+const CONFIG = {
+  // Nombres de personalización
+  couple: {
+    recipientName: "Tú", // Puedes cambiarlo por su nombre real
+    senderName: "Guillermo",
+    dateIdeaPrompt: "Creo que ahora nos toca decidir dónde vamos."
+  },
+
+  // Frase objetivo exacta (sin espacios para el mapeo de letras)
+  targetPhrase: {
+    fullFormatted: "¿QUIERES SALIR CONMIGO?",
+    words: [
+      { text: "QUIERES", letters: ["Q", "U", "I", "E", "R", "E", "S"] },
+      { text: "SALIR", letters: ["S", "A", "L", "I", "R"] },
+      { text: "CONMIGO?", letters: ["C", "O", "N", "M", "I", "G", "O", "?"] }
+    ],
+    // Total de 20 caracteres requeridos
+    allLetters: ["Q", "U", "I", "E", "R", "E", "S", "S", "A", "L", "I", "R", "C", "O", "N", "M", "I", "G", "O", "?"]
+  },
+
+  // Pantalla 1: Inicio
+  intro: {
+    badge: "SISTEMA V3.14 — EVALUACIÓN CUÁNTICA",
+    title: "TEST DE PERSONALIDAD DEFINITIVO™",
+    subtitle: "Responde honestamente.\nLos resultados determinarán tu futuro.",
+    startButtonText: "INICIAR TEST",
+    disclaimer: "⚠️ Tiempo estimado: 2 minutos. No hay respuestas incorrectas... probablemente."
+  },
+
+  // Pantalla 2: Preguntas y Respuestas
+  // Se configuran 9 preguntas divertidas y cotidianas.
+  // Cada respuesta tiene su texto visible y las letras internas asociadas.
+  questions: [
+    {
+      id: 1,
+      category: "GESTIÓN DE CRISIS",
+      question: "¿Qué harías un viernes a las 21:00 después de una semana agotadora?",
+      answers: [
+        { text: "Pijama, manta y maratón de series hasta quedarme frita", letters: ["Q", "U"] },
+        { text: "Una cervecita o cena tranquila con amigos", letters: ["Q", "U"] },
+        { text: "Plan improvisado de última hora y lo que surja", letters: ["Q", "U"] },
+        { text: "Decir que salgo, arrepentirme a las 20:30 y pedir pizza", letters: ["Q", "U"] }
+      ]
+    },
+    {
+      id: 2,
+      category: "SUPERPODERES COTIDIANOS",
+      question: "Si pudieras tener un superpoder absurdo, ¿cuál elegirías?",
+      answers: [
+        { text: "Saber siempre qué comer sin decir 'me da igual'", letters: ["I", "E"] },
+        { text: "Que la batería del móvil nunca baje del 20%", letters: ["I", "E"] },
+        { text: "Hacer aparecer café o té calentito chasqueando los dedos", letters: ["I", "E"] },
+        { text: "Poder teletransportarme directamente a la cama ya desmaquillada", letters: ["I", "E"] }
+      ]
+    },
+    {
+      id: 3,
+      category: "PSICOLOGÍA MODERNA",
+      question: "¿Cómo reaccionas cuando suena el despertador por la mañana?",
+      answers: [
+        { text: "Cinco minutos más... (se convierten en 45)", letters: ["R", "E"] },
+        { text: "Me levanto al instante como si fuera un comando militar", letters: ["R", "E"] },
+        { text: "Odio a toda la humanidad durante los primeros 15 minutos", letters: ["R", "E"] },
+        { text: "Tengo 8 alarmas con 3 minutos de diferencia entre sí", letters: ["R", "E"] }
+      ]
+    },
+    {
+      id: 4,
+      category: "DILEMAS GASTRONÓMICOS",
+      question: "¿Cuál es tu postura oficial y no negociable sobre la piña en la pizza?",
+      answers: [
+        { text: "Delicia incomprendida, viva el contraste dulce-salado", letters: ["S", "S"] },
+        { text: "Un crimen contra la humanidad y la cultura italiana", letters: ["S", "S"] },
+        { text: "Si me la pones me la como, no le hago ascos a nada", letters: ["S", "S"] },
+        { text: "Prefiero no opinar sin la presencia de mi abogado", letters: ["S", "S"] }
+      ]
+    },
+    {
+      id: 5,
+      category: "ESCENARIOS EXTREMOS",
+      question: "Ves una araña sospechosamente grande en la pared de tu habitación. ¿Plan de acción?",
+      answers: [
+        { text: "Prenderle fuego a la casa y mudarme de país", letters: ["A", "L"] },
+        { text: "Vaso de cristal, papel debajo y la libero con cuidado", letters: ["A", "L"] },
+        { text: "Grito y llamo a alguien para que gestione la situación", letters: ["A", "L"] },
+        { text: "Negociar un alquiler mensual razonable con ella", letters: ["A", "L"] }
+      ]
+    },
+    {
+      id: 6,
+      category: "SUPERVIVENCIA URBANA",
+      question: "¿Cuál sería tu rol principal en un apocalipsis zombie?",
+      answers: [
+        { text: "La líder que encuentra provisiones y refugio", letters: ["I", "R"] },
+        { text: "La primera en caer porque me despisté mirando el paisaje", letters: ["I", "R"] },
+        { text: "La estratega que no confía en nadie y tiene un búnker", letters: ["I", "R"] },
+        { text: "La que cuida de los perros del grupo pase lo que pase", letters: ["I", "R"] }
+      ]
+    },
+    {
+      id: 7,
+      category: "DESTINOS Y VIAJES",
+      question: "Te regalan un billete de avión sorpresa para este fin de semana. ¿Dónde te vas?",
+      answers: [
+        { text: "A perderte por una ciudad europea con cafeterías bonitas", letters: ["C", "O"] },
+        { text: "A una playa desierta con agua cristalina y cero cobertura", letters: ["C", "O"] },
+        { text: "A una cabaña en la montaña rodeada de naturaleza", letters: ["C", "O"] },
+        { text: "Donde haya mejor comida y buen vino", letters: ["C", "O"] }
+      ]
+    },
+    {
+      id: 8,
+      category: "FILOSOFÍA VITAL",
+      question: "¿Qué es lo que más valoras en alguien para que te caiga bien al instante?",
+      answers: [
+        { text: "Que tenga el mismo sentido del humor absurdo que yo", letters: ["N", "M"] },
+        { text: "Que sea una persona sincera, transparente y atenta", letters: ["N", "M"] },
+        { text: "Que recomiende buena música, planes o comida", letters: ["N", "M"] },
+        { text: "Que sepa mantener una conversación interesante durante horas", letters: ["N", "M"] }
+      ]
+    },
+    {
+      id: 9,
+      category: "EL DETALLE FINAL",
+      question: "Última pregunta: si esta noche pudieras elegir cualquier plan, ¿cuál ganaría?",
+      answers: [
+        { text: "Cena rica en un sitio chulo + paseo hablando de todo", letters: ["I", "G", "O", "?"] },
+        { text: "Descubrir un bar con encanto que no conocíamos", letters: ["I", "G", "O", "?"] },
+        { text: "Hacer algo divertido y diferente que nunca hayamos probado", letters: ["I", "G", "O", "?"] },
+        { text: "Sorpréndeme tú, confío en tu criterio", letters: ["I", "G", "O", "?"] }
+      ]
+    }
+  ],
+
+  // Pantalla 3: Resultados
+  results: {
+    loadingText: "ANALIZANDO RESPUESTAS…",
+    subLoadingText: "Procesando patrones cognitivos y alineación neuronal...",
+    title: "RESULTADOS OBTENIDOS",
+    detectedText: "Se han detectado varios caracteres.",
+    warningText: "El orden de los resultados parece incorrecto.",
+    calloutText: "Dadas tus respuestas deberías...",
+    auronButtonText: "VER STREAM DE AURONPLAY 📺"
+  },
+
+  // Pantalla 4: Falsa conexión AuronPlay y Error 404
+  auronplay: {
+    connectingSteps: [
+      "Conectando con AuronPlay…",
+      "Obteniendo stream en directo…",
+      "Sincronizando Twitch / Kick…",
+      "Estableciendo conexión segura…"
+    ],
+    error404: {
+      code: "ERROR 404",
+      tag: "URL_NOT_FOUND",
+      description: "El stream de AuronPlay no ha podido ser localizado.",
+      detail: "Servidor twitch.tv/auronplay respondió con estado 404: Payload interceptado por un script anónimo.",
+      backButtonText: "VOLVER ↩"
+    }
+  },
+
+  // Pantalla 5: Desencriptado
+  decrypt: {
+    terminalHeader: "SYS_DEBUG // ROOT_OVERRIDE_ENABLED",
+    steps: [
+      "RECOVERING DATA…",
+      "ANALYZING ANSWERS…",
+      "SORTING CHARACTERS…",
+      "DECRYPTING QUESTIONS…"
+    ],
+    recoveredMessage: "Las respuestas contenían información oculta.",
+    orderingMessage: "ORDENANDO RESULTADOS…"
+  },
+
+  // Pantalla 6: Reconstrucción
+  reconstruction: {
+    stepDelay: 1200, // milisegundos entre palabras
+    finalRevealDelay: 1600
+  },
+
+  // Pantalla 7: Final
+  finalScreen: {
+    lines: [
+      "Vale…",
+      "En realidad todo esto era una excusa.",
+      "Quería preguntarte algo importante."
+    ],
+    bigQuestion: "¿QUIERES SALIR CONMIGO?",
+    yesButtonText: "SÍ ❤️",
+    noButtonText: "NO",
+    noResponses: [
+      "¿Seguro? 🤔",
+      "Piénsatelo mejor…",
+      "¿De verdad? 🥺",
+      "Vaya, qué difícil me lo estás poniendo.",
+      "NO.exe ha detectado una resistencia inesperada.",
+      "El sistema no entiende tu decisión.",
+      "¿Ni siquiera una cenita rica? 🍝",
+      "Error 404: Opción 'NO' fuera de servicio.",
+      "¡Oye, que el botón SÍ está ahí mismo! 👉",
+      "Venga va, dale al botón verde ❤️"
+    ]
+  },
+
+  // Pantalla 8: Celebración / Aceptación
+  successScreen: {
+    badge: "MISIÓN COMPLETADA ❤️",
+    title: "¡SABÍA QUE DIRÍAS QUE SÍ!",
+    subtitle: "Creo que ahora nos toca decidir dónde vamos.",
+    whatsappButtonText: "DÍSELO A GUILLERMO 💬",
+    whatsappMessage: "¡He completado el test y he dicho que SÍ! ❤️ ¿A dónde me vas a llevar?",
+    extraNote: "Prepárate, que prometo un planazo inolvidable. ✨",
+    secretSectionText: "Apartado oculto",
+    secretSectionUrl: "https://www.twitch.tv/peereira7"
+  },
+
+  // Configuración de audio sintético (Web Audio API)
+  audio: {
+    enabledByDefault: true,
+    volume: 0.15
+  }
+};
+
+
+/**
+ * MÓDULO DE SONIDO CON WEB AUDIO API
+ * Genera efectos sintetizados en tiempo real sin requerir archivos externos de audio.
+ * Funciona perfectamente offline, respeta el silencio por defecto y permite togglear audio.
+ */
+
+class SoundEffects {
+  constructor() {
+    this.ctx = null;
+    this.muted = false;
+    this.volume = 0.12;
+  }
+
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        this.ctx = new AudioCtx();
+      }
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+
+  toggleMute() {
+    this.muted = !this.muted;
+    return this.muted;
+  }
+
+  isMuted() {
+    return this.muted;
+  }
+
+  playPop() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const now = this.ctx.currentTime;
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+
+    gain.gain.setValueAtTime(this.volume, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.08);
+  }
+
+  playSelect() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const now = this.ctx.currentTime;
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(520, now);
+    osc.frequency.exponentialRampToValueAtTime(1040, now + 0.1);
+
+    gain.gain.setValueAtTime(this.volume, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.1);
+  }
+
+  playTerminalBlip() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const now = this.ctx.currentTime;
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1200 + Math.random() * 400, now);
+
+    gain.gain.setValueAtTime(this.volume * 0.4, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.03);
+  }
+
+  playGlitch() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(120, now);
+    osc.frequency.setValueAtTime(80, now + 0.05);
+    osc.frequency.setValueAtTime(200, now + 0.1);
+
+    gain.gain.setValueAtTime(this.volume * 0.8, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.2);
+  }
+
+  playLetterSnap(frequency = 600) {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const now = this.ctx.currentTime;
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(frequency, now);
+    osc.frequency.exponentialRampToValueAtTime(frequency * 1.5, now + 0.15);
+
+    gain.gain.setValueAtTime(this.volume * 0.7, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.2);
+  }
+
+  playDodge() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const now = this.ctx.currentTime;
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.exponentialRampToValueAtTime(600, now + 0.08);
+    osc.frequency.exponentialRampToValueAtTime(250, now + 0.15);
+
+    gain.gain.setValueAtTime(this.volume * 0.6, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.15);
+  }
+
+  playVictory() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C5, E5, G5, C6, E6
+    const now = this.ctx.currentTime;
+
+    notes.forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const startTime = now + idx * 0.09;
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      gain.gain.setValueAtTime(this.volume, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + 0.35);
+    });
+  }
+}
+
+const sound = new SoundEffects();
+
+
+/**
+ * MÓDULO DE CONFETI Y CORAZONES
+ * Animación por Canvas de alto rendimiento sin librerías externas.
+ * Soporta corazones, cintas de confeti brillantes y destellos.
+ */
+
+class ConfettiCannon {
+  constructor(canvasElement) {
+    this.canvas = canvasElement;
+    this.ctx = canvasElement.getContext('2d');
+    this.particles = [];
+    this.animationId = null;
+    this.colors = [
+      '#ff4d79', '#ff758c', '#ff7eb3', '#ff2a6d',
+      '#05d9e8', '#010a43', '#ffe600', '#ffffff',
+      '#ff65a3', '#7afcff', '#fe8c00', '#f83600'
+    ];
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+  }
+
+  resize() {
+    this.canvas.width = window.innerWidth * window.devicePixelRatio;
+    this.canvas.height = window.innerHeight * window.devicePixelRatio;
+    this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  }
+
+  burst(count = 120) {
+    const originX = window.innerWidth / 2;
+    const originY = window.innerHeight * 0.45;
+
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 4 + Math.random() * 12;
+      const isHeart = Math.random() > 0.4;
+
+      this.particles.push({
+        x: originX,
+        y: originY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 4,
+        size: isHeart ? 14 + Math.random() * 12 : 7 + Math.random() * 8,
+        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 8,
+        gravity: 0.18 + Math.random() * 0.1,
+        drag: 0.96,
+        opacity: 1,
+        decay: 0.005 + Math.random() * 0.008,
+        isHeart: isHeart,
+        wobble: Math.random() * 10
+      });
+    }
+
+    if (!this.animationId) {
+      this.loop();
+    }
+  }
+
+  drawHeart(ctx, x, y, size, color, opacity, rotation) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.globalAlpha = opacity;
+    ctx.fillStyle = color;
+
+    ctx.beginPath();
+    const topCurveHeight = size * 0.3;
+    ctx.moveTo(0, topCurveHeight);
+    // Top left curve
+    ctx.bezierCurveTo(
+      -size / 2, -topCurveHeight,
+      -size, size / 3,
+      0, size
+    );
+    // Top right curve
+    ctx.bezierCurveTo(
+      size, size / 3,
+      size / 2, -topCurveHeight,
+      0, topCurveHeight
+    );
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  loop() {
+    this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity;
+      p.vx *= p.drag;
+      p.rotation += p.rotationSpeed;
+      p.opacity -= p.decay;
+
+      if (p.opacity <= 0 || p.y > window.innerHeight + 50) {
+        this.particles.splice(i, 1);
+        continue;
+      }
+
+      if (p.isHeart) {
+        this.drawHeart(this.ctx, p.x, p.y, p.size, p.color, p.opacity, p.rotation);
+      } else {
+        this.ctx.save();
+        this.ctx.translate(p.x, p.y);
+        this.ctx.rotate((p.rotation * Math.PI) / 180);
+        this.ctx.globalAlpha = p.opacity;
+        this.ctx.fillStyle = p.color;
+        this.ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+        this.ctx.restore();
+      }
+    }
+
+    if (this.particles.length > 0) {
+      this.animationId = requestAnimationFrame(() => this.loop());
+    } else {
+      this.animationId = null;
+    }
+  }
+
+  stop() {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
+    this.particles = [];
+    this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  }
+}
+
+
+/**
+ * PROYECTO DATE - APLICACIÓN PRINCIPAL
+ * Máquina de estados narrativos y controlador de interacciones.
+ */
+
+
+class DateApp {
+  constructor() {
+    this.currentQuestionIndex = 0;
+    this.collectedLetters = [];
+    this.noClickCount = 0;
+    this.confetti = null;
+
+    // Cache de elementos del DOM
+    this.elements = {
+      headerStatus: document.getElementById('header-system-tag'),
+      btnSoundToggle: document.getElementById('btn-sound-toggle'),
+      soundIcon: document.getElementById('sound-icon'),
+      confettiCanvas: document.getElementById('confetti-canvas'),
+
+      // Pantallas
+      screens: {
+        intro: document.getElementById('screen-intro'),
+        quiz: document.getElementById('screen-quiz'),
+        results: document.getElementById('screen-results'),
+        auronplay: document.getElementById('screen-auronplay'),
+        decrypt: document.getElementById('screen-decrypt'),
+        reconstruct: document.getElementById('screen-reconstruct'),
+        final: document.getElementById('screen-final'),
+        success: document.getElementById('screen-success')
+      },
+
+      // Intro
+      btnStartTest: document.getElementById('btn-start-test'),
+
+      // Quiz
+      quizCategory: document.getElementById('quiz-category'),
+      quizCounter: document.getElementById('quiz-counter'),
+      quizProgressFill: document.getElementById('quiz-progress-fill'),
+      quizQuestionTitle: document.getElementById('quiz-question-title'),
+      quizAnswersContainer: document.getElementById('quiz-answers-container'),
+
+      // Resultados
+      resultsAnalyzingBox: document.getElementById('results-analyzing-box'),
+      resultsLoadingBar: document.getElementById('results-loading-bar'),
+      resultsObtainedBox: document.getElementById('results-obtained-box'),
+      jumbledLettersBoard: document.getElementById('jumbled-letters-board'),
+      resultsCalloutText: document.getElementById('results-callout-text'),
+      btnAuronplay: document.getElementById('btn-auronplay'),
+
+      // AuronPlay / 404
+      auronConnectingBox: document.getElementById('auron-connecting-box'),
+      auronStepText: document.getElementById('auron-screen-title'),
+      auronProgressFill: document.getElementById('auron-progress-fill'),
+      auronPercent: document.getElementById('auron-percent'),
+      auronErrorBox: document.getElementById('auron-error-box'),
+      btnAuronBack: document.getElementById('btn-auron-back'),
+
+      // Decrypt
+      terminalConsole: document.getElementById('terminal-console'),
+      decryptProgressFill: document.getElementById('decrypt-progress-fill'),
+      decryptStatusText: document.getElementById('decrypt-status-text'),
+      decryptPercent: document.getElementById('decrypt-percent'),
+      decryptInfoCard: document.getElementById('decrypt-info-card'),
+
+      // Reconstruct
+      slotsQuieres: document.getElementById('slots-quieres'),
+      slotsSalir: document.getElementById('slots-salir'),
+      slotsConmigo: document.getElementById('slots-conmigo'),
+      finalAssembledBanner: document.getElementById('final-assembled-banner'),
+
+      // Final
+      btnYes: document.getElementById('btn-yes'),
+      btnNo: document.getElementById('btn-no'),
+      decisionArena: document.getElementById('decision-arena'),
+      noFeedbackToast: document.getElementById('no-feedback-toast'),
+
+      // Success
+      btnWhatsapp: document.getElementById('btn-whatsapp-share'),
+      btnSecretTwitch: document.getElementById('btn-secret-twitch'),
+      btnRestart: document.getElementById('btn-restart-experience'),
+      ticketRecipientName: document.getElementById('ticket-recipient-name'),
+      ticketSenderName: document.getElementById('ticket-sender-name')
+    };
+  }
+
+  init() {
+    this.confetti = new ConfettiCannon(this.elements.confettiCanvas);
+    this.setupEventListeners();
+    this.personalizeUI();
+    this.showScreen('intro');
+  }
+
+  personalizeUI() {
+    if (this.elements.ticketRecipientName) {
+      this.elements.ticketRecipientName.textContent = CONFIG.couple.recipientName;
+    }
+    if (this.elements.ticketSenderName) {
+      this.elements.ticketSenderName.textContent = CONFIG.couple.senderName;
+    }
+
+    // Configurar enlace de WhatsApp
+    if (this.elements.btnWhatsapp) {
+      const msg = encodeURIComponent(CONFIG.successScreen.whatsappMessage);
+      this.elements.btnWhatsapp.href = `https://wa.me/?text=${msg}`;
+    }
+
+    // Configurar enlace del apartado oculto (Twitch peereira7)
+    if (this.elements.btnSecretTwitch) {
+      this.elements.btnSecretTwitch.href = CONFIG.successScreen.secretSectionUrl;
+      const textSpan = this.elements.btnSecretTwitch.querySelector('span:not(.twitch-icon)');
+      if (textSpan && CONFIG.successScreen.secretSectionText) {
+        textSpan.textContent = CONFIG.successScreen.secretSectionText;
+      }
+    }
+
+    // Texto de resultados
+    if (this.elements.resultsCalloutText && CONFIG.results.calloutText) {
+      this.elements.resultsCalloutText.textContent = CONFIG.results.calloutText;
+    }
+  }
+
+  setupEventListeners() {
+    // Audio toggle
+    this.elements.btnSoundToggle.addEventListener('click', () => {
+      const isMuted = sound.toggleMute();
+      this.elements.soundIcon.textContent = isMuted ? '🔇' : '🔊';
+      if (!isMuted) sound.playPop();
+    });
+
+    // Desbloquear audio en primer toque de pantalla
+    const unlockAudio = () => {
+      sound.init();
+      window.removeEventListener('pointerdown', unlockAudio);
+      window.removeEventListener('keydown', unlockAudio);
+    };
+    window.addEventListener('pointerdown', unlockAudio);
+    window.addEventListener('keydown', unlockAudio);
+
+    // Pantalla 1: Iniciar Test
+    this.elements.btnStartTest.addEventListener('click', () => {
+      sound.playPop();
+      this.startQuiz();
+    });
+
+    // Pantalla 3: Botón Falso de AuronPlay
+    this.elements.btnAuronplay.addEventListener('click', () => {
+      sound.playPop();
+      this.startAuronplaySequence();
+    });
+
+    // Pantalla 4: Botón Volver de la pantalla 404 -> Lleva a Desencriptado
+    this.elements.btnAuronBack.addEventListener('click', () => {
+      sound.playPop();
+      this.startDecryptSequence();
+    });
+
+    // Pantalla 7: Botón SÍ
+    this.elements.btnYes.addEventListener('click', () => {
+      this.handleYesChoice();
+    });
+
+    // Pantalla 7: Botón NO que cambia de posición
+    this.elements.btnNo.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      this.handleNoChoice();
+    });
+    this.elements.btnNo.addEventListener('click', (e) => {
+      e.preventDefault();
+    });
+
+    // Pantalla 8: Apartado oculto
+    if (this.elements.btnSecretTwitch) {
+      this.elements.btnSecretTwitch.addEventListener('click', () => {
+        sound.playPop();
+      });
+    }
+
+    // Pantalla 8: Reiniciar
+    this.elements.btnRestart.addEventListener('click', () => {
+      sound.playPop();
+      this.resetApp();
+    });
+  }
+
+  showScreen(screenKey) {
+    Object.values(this.elements.screens).forEach(screen => {
+      if (screen) {
+        screen.classList.remove('active');
+      }
+    });
+
+    const targetScreen = this.elements.screens[screenKey];
+    if (targetScreen) {
+      targetScreen.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  // ================= FASE 2: TEST DE PREGUNTAS =================
+  startQuiz() {
+    this.currentQuestionIndex = 0;
+    this.collectedLetters = [];
+    this.showScreen('quiz');
+    this.renderCurrentQuestion();
+  }
+
+  renderCurrentQuestion() {
+    const totalQuestions = CONFIG.questions.length;
+    const currentQ = CONFIG.questions[this.currentQuestionIndex];
+
+    // Actualizar encabezados y progreso
+    this.elements.quizCategory.textContent = currentQ.category;
+    this.elements.quizCounter.textContent = `${this.currentQuestionIndex + 1} / ${totalQuestions}`;
+    const progressPercent = ((this.currentQuestionIndex + 1) / totalQuestions) * 100;
+    this.elements.quizProgressFill.style.width = `${progressPercent}%`;
+
+    // Pregunta
+    this.elements.quizQuestionTitle.textContent = currentQ.question;
+
+    // Contenedor de respuestas
+    this.elements.quizAnswersContainer.innerHTML = '';
+    const optionLabels = ['A', 'B', 'C', 'D'];
+
+    currentQ.answers.forEach((ans, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'answer-option-btn';
+      btn.setAttribute('role', 'radio');
+      btn.setAttribute('aria-checked', 'false');
+
+      btn.innerHTML = `
+        <span class="answer-index-badge">${optionLabels[idx] || idx + 1}</span>
+        <span class="answer-text">${ans.text}</span>
+      `;
+
+      btn.addEventListener('click', () => {
+        this.selectAnswer(btn, ans);
+      });
+
+      this.elements.quizAnswersContainer.appendChild(btn);
+    });
+  }
+
+  selectAnswer(selectedBtn, answerData) {
+    // Evitar multi-clicks
+    const allButtons = this.elements.quizAnswersContainer.querySelectorAll('.answer-option-btn');
+    allButtons.forEach(b => b.style.pointerEvents = 'none');
+
+    selectedBtn.classList.add('selected');
+    selectedBtn.setAttribute('aria-checked', 'true');
+    sound.playSelect();
+
+    // Guardar letras internas asociadas
+    if (answerData.letters && Array.isArray(answerData.letters)) {
+      this.collectedLetters.push(...answerData.letters);
+    }
+
+    // Pequeño delay de 280ms para disfrutar el feedback visual antes de pasar
+    setTimeout(() => {
+      this.currentQuestionIndex++;
+      if (this.currentQuestionIndex < CONFIG.questions.length) {
+        this.renderCurrentQuestion();
+      } else {
+        this.startResultsSequence();
+      }
+    }, 280);
+  }
+
+  // ================= FASE 3: RESULTADOS =================
+  startResultsSequence() {
+    this.showScreen('results');
+    this.elements.resultsAnalyzingBox.classList.remove('hidden');
+    this.elements.resultsObtainedBox.classList.add('hidden');
+    this.elements.resultsLoadingBar.style.width = '0%';
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.floor(Math.random() * 14) + 6;
+      if (progress > 100) progress = 100;
+      this.elements.resultsLoadingBar.style.width = `${progress}%`;
+      sound.playTerminalBlip();
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          this.revealJumbledLetters();
+        }, 400);
+      }
+    }, 180);
+  }
+
+  revealJumbledLetters() {
+    this.elements.resultsAnalyzingBox.classList.add('hidden');
+    this.elements.resultsObtainedBox.classList.remove('hidden');
+
+    // Tomamos todas las letras del objetivo para garantizar un set completo
+    const lettersPool = [...CONFIG.targetPhrase.allLetters];
+    // Barajado Fisher-Yates para asegurar desorden total
+    for (let i = lettersPool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [lettersPool[i], lettersPool[j]] = [lettersPool[j], lettersPool[i]];
+    }
+
+    this.elements.jumbledLettersBoard.innerHTML = '';
+    lettersPool.forEach((letter, index) => {
+      const card = document.createElement('div');
+      card.className = 'letter-card';
+      card.textContent = letter;
+      // Variación sutil en la animación de flotado
+      card.style.animationDelay = `${(index * 0.12).toFixed(2)}s`;
+      card.style.animationDuration = `${(2.5 + (index % 3) * 0.5).toFixed(1)}s`;
+      this.elements.jumbledLettersBoard.appendChild(card);
+    });
+
+    sound.playPop();
+  }
+
+  // ================= FASE 4: STREAM DE AURONPLAY & ERROR 404 =================
+  startAuronplaySequence() {
+    this.showScreen('auronplay');
+    this.elements.auronConnectingBox.classList.remove('hidden');
+    this.elements.auronErrorBox.classList.add('hidden');
+    this.elements.auronProgressFill.style.width = '0%';
+    this.elements.auronPercent.textContent = '0%';
+
+    const steps = CONFIG.auronplay.connectingSteps;
+    let stepIndex = 0;
+    let percent = 0;
+
+    const streamInterval = setInterval(() => {
+      percent += Math.floor(Math.random() * 12) + 5;
+      if (percent > 100) percent = 100;
+
+      this.elements.auronProgressFill.style.width = `${percent}%`;
+      this.elements.auronPercent.textContent = `${percent}%`;
+      sound.playTerminalBlip();
+
+      // Cambiar texto descriptivo en hitos de progreso
+      if (percent >= 30 && stepIndex === 0) {
+        stepIndex = 1;
+        this.elements.auronStepText.textContent = steps[stepIndex];
+      } else if (percent >= 60 && stepIndex === 1) {
+        stepIndex = 2;
+        this.elements.auronStepText.textContent = steps[stepIndex];
+      } else if (percent >= 85 && stepIndex === 2) {
+        stepIndex = 3;
+        this.elements.auronStepText.textContent = steps[stepIndex];
+      }
+
+      if (percent >= 100) {
+        clearInterval(streamInterval);
+        setTimeout(() => {
+          this.triggerFake404();
+        }, 450);
+      }
+    }, 150);
+  }
+
+  triggerFake404() {
+    sound.playGlitch();
+    this.elements.auronConnectingBox.classList.add('hidden');
+    this.elements.auronErrorBox.classList.remove('hidden');
+  }
+
+  // ================= FASE 5: DESENCRIPTADO (TERMINAL HACKER) =================
+  startDecryptSequence() {
+    this.showScreen('decrypt');
+    this.elements.terminalConsole.innerHTML = '';
+    this.elements.decryptProgressFill.style.width = '0%';
+    this.elements.decryptPercent.textContent = '0%';
+    this.elements.decryptStatusText.textContent = 'INICIANDO...';
+    this.elements.decryptInfoCard.classList.add('hidden');
+
+    const steps = CONFIG.decrypt.steps;
+    let currentStep = 0;
+
+    const runTerminalStep = () => {
+      if (currentStep < steps.length) {
+        const line = document.createElement('div');
+        line.className = 'terminal-line';
+        line.innerHTML = `
+          <span class="terminal-line-prefix">&gt;</span>
+          <span>${steps[currentStep]}</span>
+        `;
+        this.elements.terminalConsole.appendChild(line);
+        sound.playTerminalBlip();
+
+        currentStep++;
+        const pct = Math.round((currentStep / steps.length) * 100);
+        this.elements.decryptProgressFill.style.width = `${pct}%`;
+        this.elements.decryptPercent.textContent = `${pct}%`;
+        this.elements.decryptStatusText.textContent = steps[currentStep - 1];
+
+        setTimeout(runTerminalStep, 700);
+      } else {
+        // Finalización de terminal
+        this.elements.decryptStatusText.textContent = 'DECRYPT_SUCCESS';
+        sound.playPop();
+        this.elements.decryptInfoCard.classList.remove('hidden');
+
+        setTimeout(() => {
+          this.startReconstructionSequence();
+        }, 1600);
+      }
+    };
+
+    setTimeout(runTerminalStep, 400);
+  }
+
+  // ================= FASE 6: RECONSTRUCCIÓN DE LA FRASE =================
+  startReconstructionSequence() {
+    this.showScreen('reconstruct');
+    this.elements.finalAssembledBanner.classList.add('hidden');
+
+    const wordsData = CONFIG.targetPhrase.words;
+    const containers = [
+      this.elements.slotsQuieres,
+      this.elements.slotsSalir,
+      this.elements.slotsConmigo
+    ];
+
+    // Inicializar slots vacíos con guiones
+    containers.forEach((container, wordIdx) => {
+      container.innerHTML = '';
+      wordsData[wordIdx].letters.forEach(() => {
+        const slot = document.createElement('div');
+        slot.className = 'slot-tile';
+        slot.textContent = '_';
+        container.appendChild(slot);
+      });
+    });
+
+    // Animación secuencial con pausas dramáticas de suspense
+    this.animateWord(0, () => {
+      setTimeout(() => {
+        this.animateWord(1, () => {
+          setTimeout(() => {
+            this.animateWord(2, () => {
+              // Revelación final
+              setTimeout(() => {
+                this.revealFinalAssembled();
+              }, 600);
+            });
+          }, CONFIG.reconstruction.stepDelay);
+        });
+      }, CONFIG.reconstruction.stepDelay);
+    });
+  }
+
+  animateWord(wordIdx, onComplete) {
+    const wordData = CONFIG.targetPhrase.words[wordIdx];
+    const container = [
+      this.elements.slotsQuieres,
+      this.elements.slotsSalir,
+      this.elements.slotsConmigo
+    ][wordIdx];
+
+    const slots = container.querySelectorAll('.slot-tile');
+    let letterIdx = 0;
+
+    const baseFrequency = 500 + wordIdx * 100;
+
+    const fillNextLetter = () => {
+      if (letterIdx < wordData.letters.length) {
+        const char = wordData.letters[letterIdx];
+        const slot = slots[letterIdx];
+        slot.textContent = char;
+        slot.classList.add('filled');
+        sound.playLetterSnap(baseFrequency + letterIdx * 45);
+
+        letterIdx++;
+        setTimeout(fillNextLetter, 120);
+      } else {
+        container.parentElement.classList.add('revealed');
+        if (onComplete) onComplete();
+      }
+    };
+
+    fillNextLetter();
+  }
+
+  revealFinalAssembled() {
+    this.elements.finalAssembledBanner.classList.remove('hidden');
+    sound.playLetterSnap(900);
+
+    setTimeout(() => {
+      this.transitionToFinalScreen();
+    }, CONFIG.reconstruction.finalRevealDelay);
+  }
+
+  // ================= FASE 7: PANTALLA FINAL (ROMÁNTICA Y BOTÓN NO TROLL) =================
+  transitionToFinalScreen() {
+    // Cambio suave de tema visual
+    document.body.classList.remove('theme-cyber');
+    document.body.classList.add('theme-romantic');
+
+    if (this.elements.headerStatus) {
+      this.elements.headerStatus.textContent = `DE: ${CONFIG.couple.senderName.toUpperCase()}`;
+    }
+
+    this.noClickCount = 0;
+    this.resetNoButtonPosition();
+    this.elements.noFeedbackToast.classList.add('hidden');
+    this.showScreen('final');
+  }
+
+  resetNoButtonPosition() {
+    this.elements.btnNo.style.position = '';
+    this.elements.btnNo.style.left = '';
+    this.elements.btnNo.style.top = '';
+    this.elements.btnNo.style.transform = '';
+  }
+
+  handleNoChoice() {
+    sound.playDodge();
+    this.noClickCount++;
+
+    // Mensaje divertido rotativo
+    const responses = CONFIG.finalScreen.noResponses;
+    const msg = responses[(this.noClickCount - 1) % responses.length];
+
+    this.elements.noFeedbackToast.textContent = msg;
+    this.elements.noFeedbackToast.classList.remove('hidden');
+
+    // Movimiento seguro que NUNCA se sale de la pantalla visible ni tapa el botón SÍ
+    this.repositionNoButton();
+  }
+
+  repositionNoButton() {
+    const btn = this.elements.btnNo;
+    const arena = this.elements.decisionArena;
+    const yesBtn = this.elements.btnYes;
+
+    const arenaRect = arena.getBoundingClientRect();
+    const btnWidth = btn.offsetWidth || 110;
+    const btnHeight = btn.offsetHeight || 52;
+    const yesRect = yesBtn.getBoundingClientRect();
+
+    // Rango disponible dentro del contenedor seguro de la pantalla
+    // Garantizamos márgenes de seguridad para no salirse de los bordes del dispositivo
+    const padding = 12;
+    const availableWidth = Math.max(120, arenaRect.width - btnWidth - padding * 2);
+    const availableHeight = 160; // Área vertical de salto dinámico
+
+    let randomX = 0;
+    let randomY = 0;
+    let attempts = 0;
+    let isSafe = false;
+
+    // Buscar una posición aleatoria que no colisione con el botón SÍ
+    while (!isSafe && attempts < 15) {
+      randomX = (Math.random() - 0.5) * availableWidth;
+      randomY = (Math.random() - 0.5) * availableHeight;
+
+      // Comprobar que no quede directamente encima del botón Sí (cálculo de distancia relativa)
+      if (Math.abs(randomY) > 28 || Math.abs(randomX) > 70) {
+        isSafe = true;
+      }
+      attempts++;
+    }
+
+    // Aplicar transformación suave con rebote
+    btn.style.position = 'relative';
+    btn.style.transform = `translate(${randomX}px, ${randomY}px) scale(0.96)`;
+  }
+
+  // ================= FASE 8: CELEBRACIÓN Y ÉXITO =================
+  handleYesChoice() {
+    sound.playVictory();
+    this.showScreen('success');
+
+    // Disparar cañón de confeti y corazones
+    if (this.confetti) {
+      this.confetti.burst(140);
+      // Segundo disparo a los 400ms para mayor grandiosidad
+      setTimeout(() => {
+        this.confetti.burst(80);
+      }, 400);
+    }
+  }
+
+  resetApp() {
+    if (this.confetti) {
+      this.confetti.stop();
+    }
+    document.body.classList.remove('theme-romantic');
+    document.body.classList.add('theme-cyber');
+
+    if (this.elements.headerStatus) {
+      this.elements.headerStatus.textContent = 'SYS_ONLINE // SECURE_NODE';
+    }
+
+    this.currentQuestionIndex = 0;
+    this.collectedLetters = [];
+    this.noClickCount = 0;
+    this.resetNoButtonPosition();
+    this.showScreen('intro');
+  }
+}
+
+// Iniciar aplicación al cargar el DOM
+window.addEventListener('DOMContentLoaded', () => {
+  const app = new DateApp();
+  app.init();
+});
+
+</script>
 </body>
 </html>
